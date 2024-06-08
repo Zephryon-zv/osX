@@ -87,6 +87,12 @@ main:
     mov bx, 0x7E00              ; data should be after the bootloader
     call disk_read
 
+    ; Attempt to read the second sector
+    mov ax, 1           ; LBA=1, second sector from disk
+    mov cl, 1           ; 1 sector to read
+    mov bx, 0x7E00      ; data should be after the bootloader
+    call disk_read
+
     ; print hello world message
     mov si, msg_hello
     call puts
@@ -111,11 +117,8 @@ wait_key_and_reboot:
     cli                         ; disable interrupts, this way CPU can't get out of "halt" state
     hlt
 
-;
-; Disks routines
-;
 
-;
+; Disks routines
 ; Converts an LBA address to CHS address
 ; Parameters:
 ;   - ax: LBA address
@@ -125,7 +128,6 @@ wait_key_and_reboot:
 ;   - dh: head
 ;
 lba_to_chs:
-
     push ax
     push dx
 
